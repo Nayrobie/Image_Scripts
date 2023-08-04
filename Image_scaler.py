@@ -40,8 +40,9 @@ def resize_images(input_dir, output_dir, target_size):
             background.save(output_path)
 
 if __name__ == "__main__":
-    input_dir = "C:\\Users\\svc_ac-eko-ia\\Desktop\\Stable_Diff_Yonah\\classification_images"
-    output_dir = "C:\\Users\\svc_ac-eko-ia\\Desktop\\Stable_Diff_Yonah\\resized_images\\classification_images"
+    # Don't just copy paste the path, you need the separators to be double \\
+    input_dir = "C:\\Users\\svc_ac-eko-ia\\Desktop\\Stable_Diff_Yonah\\Photos_Walid"
+    output_dir = "C:\\Users\\svc_ac-eko-ia\\Desktop\\Stable_Diff_Yonah\\resized_images\\training_images"
     target_size = (1024, 1024)
 
     resize_images(input_dir, output_dir, target_size)

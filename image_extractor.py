@@ -2,6 +2,11 @@ import re # a regex pattern to remove all non-alphanumeric characters and multip
 from PIL import Image
 import os
 
+# To activate the venv, open VsCode terminal (View/Open View/Terminal)
+# cd E:\GIT_ROOT\pythonProject\Image_Scripts
+# From remote work: "Get-ExecutionPolicy" is restricted,  run "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
+# At work: .\venv\Scripts\Activate
+
 # Define the path to the image folder
 image_folder = r"E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\txt2img-images\2023-07-25"
 

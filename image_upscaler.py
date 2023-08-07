@@ -10,6 +10,7 @@ from modules.processing import Processed
 from modules.shared import opts, cmd_opts, state
 
 import os
+import glob
 
 from modules import images
 from modules import processing
@@ -24,12 +25,15 @@ from modules.extras import run_pnginfo
 
 # To activate the venv, open VsCode terminal (View/Open View/Terminal)
 # cd E:\GIT_ROOT\pythonProject
-# if "Get-ExecutionPolicy" is restricted then run "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" (only needed once)
-# .\venv\Scripts\Activate
+# From remote work: "Get-ExecutionPolicy" is restricted,  run "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
+# At work: .\venv\Scripts\Activate
 
-# to use this script, copy paste the script in "E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\scripts", then 
-# run AUTO1111 web UI then 
-# 
+# Set the input and output directories
+input_directory = r'E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\txt2img-images\2023-08-02'
+output_directory = r'C:\Users\svc_ac-eko-ia\Desktop\Stable_Diff_Yonah\rescaled_images\training_images'
+
+# List image files in the input directory
+image_files = glob.glob(os.path.join(input_directory, '*.jpg'))
 
 class Script(scripts.Script):
     def title(self):
@@ -154,3 +158,35 @@ class Script(scripts.Script):
         processed = Processed(p, result_images, seed, initial_info)
 
         return processed
+    
+
+# Function to upscale and save images
+def upscale_and_save_image(image_file):
+    # Load the image
+    image = Image.open(image_file)
+
+    # Define the upscale parameters (you can customize these values as needed)
+    overlap = 64
+    scale_factor = 2.0
+    upscaler_index = 0  # Set the index for the desired upscaler, e.g., 0 for the first upscaler
+
+    # Create an instance of the Script class
+    upscale_script = Script()
+
+    # Call the run function to upscale the image
+    processed_image = upscale_script.run(image, _, overlap=overlap, upscaler_index=upscaler_index, scale_factor=scale_factor,
+                                         wantPrompt=False, wantNegative=False, wantSeed=False, wantSteps=False,
+                                         wantCFGScale=False, wantSize=False, wantdenoise=False)
+
+    # Get the upscaled image from the processed_image object
+    upscaled_image = processed_image.images[0]
+
+    # Save the upscaled image to the output directory with the same filename
+    output_filename = os.path.join(output_directory, os.path.basename(image_file))
+    upscaled_image.save(output_filename)
+
+# Loop through the image files and upscale them
+for image_file in image_files:
+    upscale_and_save_image(image_file)
+
+print("Upscaling completed.")

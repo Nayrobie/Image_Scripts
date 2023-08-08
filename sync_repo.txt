@@ -1,0 +1,19 @@
+cd E:\GIT_ROOT\pythonProject\Image_Scripts
+
+
+To activate the venv, open VsCode terminal (View/Open View/Terminal)
+From remote work: if "Get-ExecutionPolicy" is restricted,  run:
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+At work, run: 
+.\venv\Scripts\Activate
+
+
+Push to the Github repository:
+git add .
+git commit -m ""
+git push
+
+
+Update the GitLab repository from the Terminal:
+git pull origin master
+git push gitlab

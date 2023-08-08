@@ -1,11 +1,6 @@
 from PIL import Image
 import os
 
-# To activate the venv, open VsCode terminal (View/Open View/Terminal)
-# cd E:\GIT_ROOT\pythonProject
-# if "Get-ExecutionPolicy" is restricted then run "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
-# .\venv\Scripts\Activate
-
 def resize_images(input_dir, output_dir, target_size):
     # Create the output directory if it doesn't exist
     if not os.path.exists(output_dir):

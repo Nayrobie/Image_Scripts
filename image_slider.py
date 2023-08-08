@@ -3,7 +3,6 @@ from PIL import Image, ImageTk
 import requests
 from io import BytesIO
 
-
 class ImageSliderApp:
     def __init__(self, image_pair):
         self.root = tk.Tk()

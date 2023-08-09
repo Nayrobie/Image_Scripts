@@ -53,45 +53,6 @@ prompt_tags = {
 }
 
 
-def cmdargs(line):
-    args = shlex.split(line)
-    pos = 0
-    res = {}
-
-    while pos < len(args):
-        arg = args[pos]
-
-        assert arg.startswith("--"), f'must start with "--": {arg}'
-        assert pos+1 < len(args), f'missing argument for command line option {arg}'
-
-        tag = arg[2:]
-
-        if tag == "prompt" or tag == "negative_prompt":
-            pos += 1
-            prompt = args[pos]
-            pos += 1
-            while pos < len(args) and not args[pos].startswith("--"):
-                prompt += " "
-                prompt += args[pos]
-                pos += 1
-            res[tag] = prompt
-            continue
-
-
-        func = prompt_tags.get(tag, None)
-        assert func, f'unknown commandline option: {arg}'
-
-        val = args[pos+1]
-        if tag == "sampler_name":
-            val = sd_samplers.samplers_map.get(val.lower(), None)
-
-        res[tag] = func(val)
-
-        pos += 2
-
-    return res
-
-
 class Script(scripts.Script):
     def title(self):
         return "Batch testing"
@@ -100,35 +61,26 @@ class Script(scripts.Script):
             return []
     
     def run(self, p):
-        # Set the seed value
+        # What's always true
         p.seed = 1500269447
-        p.prompt="dog"
         p.do_not_save_grid = True
-
         state.job_count = 1
 
+        # What's specific to each images
         copy_p = copy.copy(p)
-
-
-
+        copy_p.prompt = "cat"
         proc = process_images(copy_p)
-
-
         images = proc.images
         all_prompts = proc.all_prompts
         infotexts = proc.infotexts
-
-
         Processed(p, images, p.seed, "", all_prompts=all_prompts, infotexts=infotexts)
 
-        p.prompt="cat"
         copy_p2 = copy.copy(p)
         copy_p2.prompt = "horse"
         proc2 = process_images(copy_p2)
         images2 = proc2.images
         all_prompts2 = proc2.all_prompts
         infotexts2 = proc2.infotexts
-
         Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)
 
         return Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)

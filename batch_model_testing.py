@@ -15,14 +15,11 @@ from modules.shared import state
 def process_string_tag(tag):
     return tag
 
-
 def process_int_tag(tag):
     return int(tag)
 
-
 def process_float_tag(tag):
     return float(tag)
-
 
 def process_boolean_tag(tag):
     return True if (tag == "true") else False
@@ -99,22 +96,39 @@ class Script(scripts.Script):
     def title(self):
         return "Batch testing"
 
-    def ui(self, is_img2img):
+    def ui(self):
             return []
     
     def run(self, p):
         # Set the seed value
         p.seed = 1500269447
-
+        p.prompt="dog"
         p.do_not_save_grid = True
 
         state.job_count = 1
 
         copy_p = copy.copy(p)
 
+
+
         proc = process_images(copy_p)
+
+
         images = proc.images
         all_prompts = proc.all_prompts
         infotexts = proc.infotexts
 
-        return Processed(p, images, p.seed, "", all_prompts=all_prompts, infotexts=infotexts)
+
+        Processed(p, images, p.seed, "", all_prompts=all_prompts, infotexts=infotexts)
+
+        p.prompt="cat"
+        copy_p2 = copy.copy(p)
+        copy_p2.prompt = "horse"
+        proc2 = process_images(copy_p2)
+        images2 = proc2.images
+        all_prompts2 = proc2.all_prompts
+        infotexts2 = proc2.infotexts
+
+        Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)
+
+        return Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)

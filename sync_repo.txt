@@ -17,3 +17,7 @@ git push
 Update the GitLab repository from the Terminal:
 git pull origin master
 git push gitlab
+
+
+Copy-paste (and replace) scripts from here to AUTO1111 custom scripts:
+Copy-Item -Path "E:\GIT_ROOT\pythonProject\Image_Scripts\batch_model_testing.py" -Destination "E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\scripts\" -Force

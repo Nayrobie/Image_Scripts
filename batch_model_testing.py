@@ -66,22 +66,19 @@ class Script(scripts.Script):
         p.do_not_save_grid = True
         state.job_count = 1
 
-        # What's specific to each images
-        copy_p = copy.copy(p)
-        copy_p.prompt = "cat"
-        proc = process_images(copy_p)
-        images = proc.images
-        all_prompts = proc.all_prompts
-        infotexts = proc.infotexts
-        Processed(p, images, p.seed, "", all_prompts=all_prompts, infotexts=infotexts)
+        # List of prompts
+        prompts = ["dog", "horse"]
 
-        copy_p2 = copy.copy(p)
-        copy_p2.prompt = "horse"
-        proc2 = process_images(copy_p2)
-        images2 = proc2.images
-        all_prompts2 = proc2.all_prompts
-        infotexts2 = proc2.infotexts
-        Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)
+        # Process images for each prompt
+        processed_images = []
+        for prompt in prompts:
+            copy_p = copy.copy(p)
+            copy_p.prompt = prompt
+            proc = process_images(copy_p)
+            images = proc.images
+            all_prompts = proc.all_prompts
+            infotexts = proc.infotexts
+            processed_images.append(Processed(p, images, p.seed, "", all_prompts=all_prompts, infotexts=infotexts))
 
-        # What's displayed in AUTO1111 (1image, the horse)
-        return Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2) 
+        # Return the list of processed images
+        return processed_images

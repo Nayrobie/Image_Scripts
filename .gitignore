@@ -1,3 +1,5 @@
 modules/
 venv/
 sync_repo.txt
+Popup_interface.py
+ui_automatic1111.py

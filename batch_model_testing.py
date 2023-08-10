@@ -83,4 +83,5 @@ class Script(scripts.Script):
         infotexts2 = proc2.infotexts
         Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)
 
-        return Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2)
+        # What's displayed in AUTO1111 (1image, the horse)
+        return Processed(p,images2, p.seed, "", all_prompts=all_prompts2, infotexts=infotexts2) 

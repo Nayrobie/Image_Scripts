@@ -4,20 +4,22 @@ import io
 import base64
 from PIL import Image, PngImagePlugin
 
-# Access automatic1111: set up API url and payload
 url = "http://127.0.0.1:7860"
 
 payload = {
-    "prompt": "magicien in the woods",
-    "steps": 10
+    "prompt": "cute pink dog",
+    "steps": 10,
 }
 
-# See http://127.0.0.1:7860/docs#/default/text2imgapi_sdapi_v1_txt2img_post
 response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
 
 r = response.json()
+print(r.get("info"))
 
-# Process generated images
+# Get the seed value
+seed = r.get('seed')
+print(seed)
+
 for i in r['images']:
     image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
@@ -28,4 +30,7 @@ for i in r['images']:
 
     pnginfo = PngImagePlugin.PngInfo()
     pnginfo.add_text("parameters", response2.json().get("info"))
-    image.save('output.png', pnginfo=pnginfo)
+    
+    # Update the output directory path
+    output_path = r"E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\sd_api\output.png"
+    image.save(output_path, pnginfo=pnginfo)

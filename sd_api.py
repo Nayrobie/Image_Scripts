@@ -2,35 +2,40 @@ import json
 import requests
 import io
 import base64
-from PIL import Image, PngImagePlugin
+from PIL import Image
 
 url = "http://127.0.0.1:7860"
 
 payload = {
-    "prompt": "cute pink dog",
+    "prompt": "mountain",
     "steps": 10,
 }
 
 response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
 
 r = response.json()
+# Print all the generated image info
 print(r.get("info"))
 
-# Get the seed value
-seed = r.get('seed')
-print(seed)
+info_json = json.loads(r.get("info"))  # Parse the "info" JSON string
+
+# Extract the Seed value from the infotexts list
+seed = None
+for infotext in info_json.get("infotexts", []):
+    if "Seed" in infotext:
+        seed = infotext.split("Seed: ")[1].split(",")[0]
+        break
 
 for i in r['images']:
-    image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+    image_data = base64.b64decode(i.split(",", 1)[0])
+    image = Image.open(io.BytesIO(image_data))
 
-    png_payload = {
-        "image": "data:image/png;base64," + i
-    }
-    response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+    # Update the output directory path with the seed value in the filename
+    output_path = f"E:\\GIT_ROOT\\AC-EKO-IA\\AUTOMATIC1111\\outputs\\sd_api\\{seed}.jpg"
+    image.save(output_path, format='JPEG', quality=95)
 
-    pnginfo = PngImagePlugin.PngInfo()
-    pnginfo.add_text("parameters", response2.json().get("info"))
-    
-    # Update the output directory path
-    output_path = r"E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\sd_api\output.png"
-    image.save(output_path, pnginfo=pnginfo)
+    # Open the saved image and add the parameters info as a comment
+    with Image.open(output_path) as saved_image:
+        comment = r.get("info")  # Use the info from the main response
+        saved_image.info["comment"] = comment
+        saved_image.save(output_path)

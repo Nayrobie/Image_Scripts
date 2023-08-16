@@ -22,34 +22,27 @@ for existing_image in existing_images:
 # models = ["c249d7853b", "c0d1994c73", "4199bcdd14"]
 # Dreamshaper, realisticVision, revAnimated
 
-prompts = ["dragon"]
+model_checkpoints = ["dreamshaper_6BakedVae.safetensors [c249d7853b]"]
 
-for prompt in prompts:
+for model_checkpoint in model_checkpoints:
     payload = {
-        "prompt": prompt,
+        "prompt": "dragon",
         "negative_prompt": "purple",
         "steps": 10,
         "seed": 2845804966,
-        # Doesn't work
+        # Doesn't work:
         # "sd_model_hash": "c249d7853b",
         # "model_name": "dreamshaper_6BakedVae",
         # "sd_model_checkpoint": "dreamshaper_6BakedVae.safetensors [c249d7853b]" 
     }
+    override_settings = {
+        "sd_model_checkpoint": model_checkpoint
+    }
 
-    # Response1
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
     r = response.json()
     print(r.get("info")) # Print all the generated image info
     info_json = json.loads(r.get("info"))  # Parse the "info" JSON string
-
-    # Response2
-    override_settings = {
-        "sd_model_checkpoint": "dreamshaper_6BakedVae.safetensors [c249d7853b]"  # Update with the desired model checkpoint
-    }
-    payload.update({"override_settings": override_settings})
-    response2 = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-    r2 = response2.json()
-    print(r2.get("info")) 
 
     # Extract the infotexts value
     infotexts = info_json.get("infotexts")[0]  # Assuming there's only one infotext

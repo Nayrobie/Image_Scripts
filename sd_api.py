@@ -7,32 +7,34 @@ from PIL import Image
 
 url = "http://127.0.0.1:7860"
 
-payload = {
-    "prompt": "black dragon",
-    "steps": 10,
-    "negative_prompt": "purple",
-    "seed": 475849700
-}
+prompts = ["red dragon", "white dragon", "pink dragon"]
 
-response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+for prompt in prompts:
+    payload = {
+        "prompt": prompt,
+        "negative_prompt": "purple",
+        "steps": 10
+    }
 
-r = response.json()
-# Print all the generated image info
-print(r.get("info"))
+    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
 
-info_json = json.loads(r.get("info"))  # Parse the "info" JSON string
+    r = response.json()
+    # Print all the generated image info
+    print(r.get("info"))
 
-# Extract the infotexts value
-infotexts = info_json.get("infotexts")[0]  # Assuming there's only one infotext
+    info_json = json.loads(r.get("info"))  # Parse the "info" JSON string
 
-filename = re.sub(r'[:,\s]+', '_', infotexts)
-filename = filename.replace("__", "_")  # Replace double underscores with a single underscore
-filename = filename + ".jpg"
+    # Extract the infotexts value
+    infotexts = info_json.get("infotexts")[0]  # Assuming there's only one infotext
 
-# Select the first image from the images list
-image_data = base64.b64decode(r['images'][0].split(",", 1)[0])
-image = Image.open(io.BytesIO(image_data))
+    filename = re.sub(r'[:,\s]+', '_', infotexts)
+    filename = filename.replace("__", "_")  # Replace double underscores with a single underscore
+    filename = filename + ".jpg"
 
-# Update the output directory path with the generated filename
-output_path = f"E:\\GIT_ROOT\\AC-EKO-IA\\AUTOMATIC1111\\outputs\\sd_api\\{filename}"
-image.save(output_path, format='JPEG', quality=95)
+    # Select the first image from the images list
+    image_data = base64.b64decode(r['images'][0].split(",", 1)[0])
+    image = Image.open(io.BytesIO(image_data))
+
+    # Update the output directory path with the generated filename
+    output_path = f"E:\\GIT_ROOT\\AC-EKO-IA\\AUTOMATIC1111\\outputs\\sd_api\\{filename}"
+    image.save(output_path, format='JPEG', quality=95)

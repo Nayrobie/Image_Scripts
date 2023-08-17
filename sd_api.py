@@ -23,21 +23,33 @@ for existing_image in existing_images:
 # and execute the code at: /sdapi/v1/sd-models
 
 model_checkpoints = [
+    "level4_v50BakedVAEFp16.safetensors [c61df6130b]",
+    "SPYBGToolkit_v50-official.ckpt [5d6cf7c225]",
+    "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+    "rpg_V4.safetensors [e04b020012]",
     "dreamshaper_6BakedVae.safetensors [c249d7853b]",
     "realisticVisionV20_v20NoVAE.safetensors [c0d1994c73]",
     "revAnimated_v122.safetensors [4199bcdd14]"
     ]
-
-prompt1 = ["dragon", "cat"]
-prompt2 = "red"
+prompt1 = [
+    "a developers conf poster, A Mandalorian squad centered, space, desert, mountains, art gta 5 cover, official fanart behance hd artstation by jesper ejsing, by rhads, makoto shinkai alois van baarle, ilya kuvshinov, ossdraws, orange tones, man in ski outfit"
+    ]
+prompt2 = "cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed iris, pupils, semi-realistic, text, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, canvas frame, bad art, weird colors, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, tiling, poorly drawn feet, mutated, cross-eye, body out of frame, nude, naked, watermark, blurred"
 
 for model_checkpoint in model_checkpoints:
     for p in prompt1:
         payload = {
             "prompt": p,
             "negative_prompt": prompt2,
-            "steps": 10,
             "seed": 1500269447,
+            "width": 512,
+            "height": 512,
+            "sampler_name": "Euler",
+            "cfg_scale": 7.0, 
+            "steps": 20, 
+            "restore_faces": False, 
+            "denoising_strength": 0, 
+            "extra_generation_params": {},                                                                                                                                                                                                                                                                                         "styles": [], 
         }
         override_settings = {
             "sd_model_checkpoint": model_checkpoint
@@ -51,7 +63,7 @@ for model_checkpoint in model_checkpoints:
         r = response.json()
 
         # Print all the generated image info
-        # print(r.get("info"))
+        print(r.get("info"))
         info_json = json.loads(r.get("info"))  # Parse the "info" JSON string
 
         # Extract the infotexts value

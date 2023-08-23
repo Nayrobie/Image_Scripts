@@ -8,7 +8,7 @@ import os
 
 url = "http://127.0.0.1:7860"
 
-output_directory = "E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\sd_api\models_comparison"
+output_directory = "E:\GIT_ROOT\AC-EKO-IA\AUTOMATIC1111\outputs\sd_api\script_test"
 existing_images = [f for f in os.listdir(output_directory) if f.endswith(".jpg")]
 
 info_txt = os.path.join(output_directory, "generated_info.txt")
@@ -23,25 +23,22 @@ for existing_image in existing_images:
 # and execute the code at: /sdapi/v1/sd-models
 
 model_checkpoints = [
-    "level4_v50BakedVAEFp16.safetensors [c61df6130b]",
     "SPYBGToolkit_v50-official.ckpt [5d6cf7c225]",
-    "v1-5-pruned-emaonly.safetensors [6ce0161689]",
-    "rpg_V4.safetensors [e04b020012]",
-    "dreamshaper_6BakedVae.safetensors [c249d7853b]",
-    "realisticVisionV20_v20NoVAE.safetensors [c0d1994c73]",
-    "revAnimated_v122.safetensors [4199bcdd14]"
+    "sd_xl_base_1.0.safetensors [31e35c80fc]",
+    "rpg_V4.safetensors [e04b020012]"
     ]
 prompt1 = [
-    "a developers conf poster, A Mandalorian squad centered, space, desert, mountains, art gta 5 cover, official fanart behance hd artstation by jesper ejsing, by rhads, makoto shinkai alois van baarle, ilya kuvshinov, ossdraws, orange tones, man in ski outfit"
+    "A developers conf poster, Samurai warrior standing in a flower field, Japan, official fanart behance, extra realistic, shot with cinematic camera, remarkable colours, A developers conf poster, Samurai warrior standing in a flower field, Japan, official fanart behance, extra realistic"
     ]
-prompt2 = "cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed iris, pupils, semi-realistic, text, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, canvas frame, bad art, weird colors, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, tiling, poorly drawn feet, mutated, cross-eye, body out of frame, nude, naked, watermark, blurred"
+prompt2 = "((text)), cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed iris, pupils, semi-realistic, text, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, canvas frame, bad art, weird colors, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, tiling, poorly drawn feet, mutated, cross-eye, body out of frame, nude, naked, watermark, blurred"
 
 for model_checkpoint in model_checkpoints:
     for p in prompt1:
+        # Default generation parameters
         payload = {
             "prompt": p,
             "negative_prompt": prompt2,
-            "seed": 1500269447,
+            "seed": 755961913,
             "width": 512,
             "height": 512,
             "sampler_name": "Euler",
@@ -51,6 +48,17 @@ for model_checkpoint in model_checkpoints:
             "denoising_strength": 0, 
             "extra_generation_params": {},                                                                                                                                                                                                                                                                                         "styles": [], 
         }
+        # Custom best parameters for specific models
+        # /!\ For SDXL base 1.0 when setting 1080x1080 you'll get a torch.cuda.OutOfMemoryError 
+        # that can be fixed if you delete --no-half from the webui-user.bat
+        if model_checkpoint == "sd_xl_base_1.0.safetensors [31e35c80fc]":
+            payload["width"] = 1080
+            payload["height"] = 1080
+        if model_checkpoint == "SPYBGToolkit_v50-official.ckpt [5d6cf7c225]":
+            payload["width"] = 768
+            payload["height"] = 768
+
+        # For the script to override the model chosen on A1111    
         override_settings = {
             "sd_model_checkpoint": model_checkpoint
         }

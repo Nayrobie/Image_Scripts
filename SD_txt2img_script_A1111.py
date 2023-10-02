@@ -8,7 +8,7 @@ import os
 
 url = "http://127.0.0.1:7860"
 
-output_directory = "D:\GIT\stable-diffusion-webui\outputs\sd_api\models_and_prompt"
+output_directory = "D:\GIT\stable-diffusion-webui\outputs\sd_api\mix_animals_prompt"
 existing_images = [f for f in os.listdir(output_directory) if f.endswith(".jpg")]
 
 info_txt = os.path.join(output_directory, "generated_info.txt")
@@ -18,44 +18,39 @@ for existing_image in existing_images:
     image_number = int(existing_image.split(".")[0].replace("image_", ""))
     highest_image_number = max(highest_image_number, image_number)
 
-# How to get model hash:
-# go to http://127.0.0.1:7860/docs#/default/get_sd_models_sdapi_v1_sd_models_get
-# and execute the code at: /sdapi/v1/sd-models
+# API get info http://127.0.0.1:7860/docs#/default
+
+# Define X and Y of the matrix
+x_options = ["cat", "axolotl", "horse", "elephant"]
+y_options = ["giraffe", "octopus", "dolphin", "chameleon"]
+
+prompts = []
+for x in x_options:
+    for y in y_options:
+        # Construct the prompt dynamically
+        prompt = f"Realistic photography of a ({x}:0.5) ({y}:0.5)"
+        prompts.append(prompt)
 
 model_checkpoints = [
-    "sd_xl_base_1.0.safetensors [31e35c80fc]",
-    "dreamshaperXL10_alpha2Xl10.safetensors",
-    "rundiffusionXL_beta.safetensors",
-    "samaritan3dCartoon_v40SDXL.safetensors [1b8fca3fee]"
+    "rundiffusionXL_beta.safetensors [f3efadbbaf]"
     ]
-prompts = [
-    "Digital artwork of Ezio from Assins' Creed franchise, depicted in full from head to toe",
-    "Digital artwork of Bayek from Assins' Creed Origins, depicted in full from head to toe",
-    "Digital artwork of Eivor from Assins' Creed Valhalla, depicted in full from head to toe"
-    ]
+
 for m in model_checkpoints:
     for p in prompts:
         # Default generation parameters
-        payload = {
+        txt2img_payload = {
             "prompt": p,
-            #"negative_prompt": ,
-            "seed": 1476951986,
+            "negative_prompt": "",
+            "seed": -1,
             "width": 1024,
             "height": 1024,
             "sampler_name": "Euler a",
             "cfg_scale": 7.0, 
-            "steps": 100, 
+            "steps": 50, 
             "restore_faces": False, 
             "denoising_strength": 0, 
             "extra_generation_params": {},                                                                                                                                                                                                                                                                                         "styles": [], 
         }
-        # Custom best parameters for specific models
-        # /!\ For SDXL base 1.0 when setting 1080x1080 you'll get a torch.cuda.OutOfMemoryError 
-        # that can be fixed if you delete --no-half from the webui-user.bat
-        
-        #if m == "sd_xl_base_1.0.safetensors [31e35c80fc]":
-            #payload["width"] = 1344
-            #payload["height"] = 768
 
         # For the script to override the model chosen on A1111    
         override_settings = {
@@ -64,10 +59,10 @@ for m in model_checkpoints:
         override_payload = {
             "override_settings": override_settings
         }
-        payload.update(override_payload)
+        txt2img_payload.update(override_payload)
 
-        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-        r = response.json()
+        txt2img_response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=txt2img_payload)
+        r = txt2img_response.json()
 
         # Print all the generated image info
         print(r.get("info"))

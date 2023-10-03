@@ -49,7 +49,9 @@ for m in model_checkpoints:
             "steps": 50, 
             "restore_faces": False, 
             "denoising_strength": 0, 
-            "extra_generation_params": {},                                                                                                                                                                                                                                                                                         "styles": [], 
+            "extra_generation_params": {},
+            "styles": [],
+            "save_images": True
         }
 
         # For the script to override the model chosen on A1111    

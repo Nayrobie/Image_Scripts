@@ -5,13 +5,19 @@ import base64
 import re
 from PIL import Image
 import os
+import json
+
+# Load the configuration from the JSON file
+with open('config.json') as config_file:
+    config = json.load(config_file)
+# Access the input_image_path from the configuration
+output_directory_path = config["output_directory_path"]
 
 url = "http://127.0.0.1:7860"
 
-output_directory = "D:\GIT\stable-diffusion-webui\outputs\sd_api\mix_animals_prompt"
-existing_images = [f for f in os.listdir(output_directory) if f.endswith(".jpg")]
+existing_images = [f for f in os.listdir(output_directory_path) if f.endswith(".jpg")]
 
-info_txt = os.path.join(output_directory, "generated_info.txt")
+info_txt = os.path.join(output_directory_path, "generated_info.txt")
 
 highest_image_number = -1
 for existing_image in existing_images:

@@ -3,6 +3,13 @@ import cv2
 import base64
 import requests
 from PIL import Image
+import json
+
+# Load the configuration from the JSON file
+with open('config.json') as config_file:
+    config = json.load(config_file)
+# Access the input_image_path from the configuration
+input_image_path = config["input_image_path"]
 
 # A1111 URL
 url = "http://127.0.0.1:7860"

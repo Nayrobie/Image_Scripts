@@ -1,3 +1,4 @@
 modules/
 venv/
 sync_repo.txt
+config.json

@@ -5,11 +5,37 @@ import requests
 from PIL import Image
 import json
 
-# Load the configuration from the JSON file
-with open('config.json') as config_file:
-    config = json.load(config_file)
-# Access the input_image_path from the configuration
-input_image_path = config["input_image_path"]
+# User configurations
+input_image_path = r"D:\GIT\house_gray.jpg"
+user_choice = "txt2img"
+prompt = "An old, weathered lighthouse standing tall on a desolate, rocky coastline"
+negative_prompt = "low-quality, watermark, deformed, distorted anatomy, poor artistry, NSFW, Cleavage, Nudity, Naked, explicit content, mutated features, extra limbs, extra fingers, ugly, missing body parts, disconnected elements, malformed, abnormal proportions, aberrant hands, aberrant feet, aberrant  legs, aberrant  fingers"
+model_checkpoint = "juggernautXL_version45.safetensors [ca4802bc3f]"
+controlnet_module = [
+    "lineart",
+    #"scribble_pidinet",
+    #"canny",
+    #"depth_midas"
+    ]
+denoising_strengh = 0.3
+styles = [
+    "3D Rendering",
+    "Cinematic",
+    "Portrait",
+    "Digital Drawing",
+    "Sketchbook",
+    "Manga",
+    "Indie Game",
+    "Craft Clay",
+    "Isometric",
+    "Low Poly",
+    "Origami",
+    "Glass and Steel",
+    "Biomechanical",
+    "Steampunk",
+    "Pirate Punk",
+    "Neon Punk"   
+]
 
 # A1111 URL
 url = "http://127.0.0.1:7860"
@@ -33,6 +59,21 @@ def encode_image_to_base64(input_path):
 
     except Exception as e:
         return str(e)
+
+# Command line quick UI
+def get_user_choice():
+    print("Choose an option:")
+    print("1. Controlnet")
+    print("2. Img2img")
+    print("3. Txt2img")
+    choice = input("Enter the number of your choice: ")
+    return choice
+
+def get_user_prompt():
+    return input("Enter your prompt: ")
+
+user_choice = get_user_choice()
+prompt = get_user_prompt()
 
 def txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_module):
     """
@@ -82,6 +123,7 @@ def txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_mod
     # Trigger Generation
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=controlnet_payload)
     r = response.json()
+    print(f"Generated image for controlnet_module: {controlnet_module}")
 
 def img2img(prompt, negative_prompt, model_checkpoint, input_img, denoising_strengh):
     """
@@ -122,20 +164,20 @@ def img2img(prompt, negative_prompt, model_checkpoint, input_img, denoising_stre
     #result = r['images'][0]
     #image = Image.open(io.BytesIO(base64.b64decode(result.split(",", 1)[0])))
 
-def txt2img(prompt, negative_prompt, model_checkpoint):
+def txt2img(prompt, negative_prompt, model_checkpoint, styles):
     txt2img_payload = {
         "prompt": prompt,
         "negative_prompt": negative_prompt,
         "seed": -1,
-        "width": 512,
-        "height": 512,
+        "width": 1024,
+        "height": 1024,
         "sampler_name": "Euler a",
         "cfg_scale": 7.0, 
         "steps": 30, 
         "restore_faces": False, 
         "denoising_strength": 0, 
         "extra_generation_params": {},
-        "styles": [],
+        "styles": styles,
         "save_images": True
     }
 
@@ -164,26 +206,23 @@ controlnet_mapping = {
 # Controlnet API doc https://github.com/Mikubill/sd-webui-controlnet/wiki/API
 # API get info http://127.0.0.1:7860/docs#/default
 
-# User specific parameters for the generated image
-user_choice = "controlnet"
-prompt = ""
-negative_prompt = ""
-model_checkpoint = "dreamshaper_8.safetensors [879db523c3]"
-controlnet_module = "lineart"
-
-input_image_path = r"C:\Users\svc_ac-eko-ia\Downloads\house_gray.jpg"
-denoising_strengh = 0.3
 encoded_image = encode_image_to_base64(input_image_path)
 
 # User's choice between the different payloads
-if user_choice == "controlnet":
-    # Send the ControlNet request
-    txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_module)
-elif user_choice == "img2img":
+if user_choice == "1":
+    if isinstance(controlnet_module, list):
+        # Generate images for each controlnet module
+        for module in controlnet_module:
+            txt2img_controlnet(prompt, negative_prompt, model_checkpoint, module)
+    else:
+        # Send the ControlNet request for a single module
+        txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_module)
+elif user_choice == "2":
     # Send the img2img request
     img2img(prompt, negative_prompt, encoded_image)
-elif user_choice == "txt2img":
-    # Send the img2img request
-    txt2img(prompt, negative_prompt, model_checkpoint)
+elif user_choice == "3":
+    # Generate images for each style in the 'styles' list
+    for style in styles:
+        txt2img(prompt, negative_prompt, model_checkpoint, [style])
 else:
-    print("Invalid user choice. Please specify 'controlnet', 'txt2img' or 'img2img'.")
+    print("Invalid user choice. Please specify '1', '2', or '3'.")

@@ -2,3 +2,4 @@ modules/
 venv/
 sync_repo.txt
 config.json
+SD_batch_model_A1111.py

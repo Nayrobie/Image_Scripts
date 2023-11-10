@@ -1,4 +1,8 @@
-# This script saves every step of the denoising process during image generation.
+"""
+This script saves every step of the denoising process during image generation.
+It intercepts the latent variable at each step, converts it to an image, and saves it.
+The generated images at different denoising steps are stored in a specified folder.
+"""
 
 import os.path
 import modules.scripts as scripts

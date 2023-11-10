@@ -4,6 +4,8 @@ import base64
 import requests
 from PIL import Image
 import json
+import tkinter as tk
+from tkinter import simpledialog
 
 # User configurations
 input_image_path = r"D:\GIT\house_gray.jpg"
@@ -20,21 +22,20 @@ controlnet_module = [
 denoising_strengh = 0.3
 styles = [
     "3D Rendering",
-    "Cinematic",
-    "Portrait",
+    #"Cinematic",
+    #"Portrait",
     "Digital Drawing",
-    "Sketchbook",
-    "Manga",
-    "Indie Game",
-    "Craft Clay",
+    #"Sketchbook",
+    #"Manga",
+    #"Indie Game",
+    #"Craft Clay",
     "Isometric",
     "Low Poly",
     "Origami",
-    "Glass and Steel",
-    "Biomechanical",
+    #"Biomechanical",
     "Steampunk",
-    "Pirate Punk",
-    "Neon Punk"   
+    #"Pirate Punk",
+    "Neon Punk" 
 ]
 
 # A1111 URL
@@ -60,19 +61,31 @@ def encode_image_to_base64(input_path):
     except Exception as e:
         return str(e)
 
-# Command line quick UI
-def get_user_choice():
-    print("Choose an option:")
-    print("1. Controlnet")
-    print("2. Img2img")
-    print("3. Txt2img")
-    choice = input("Enter the number of your choice: ")
-    return choice
+# Create a tkinter window
+root = tk.Tk()
+
+# Function to set user choice
+def set_user_choice(choice):
+    global user_choice
+    user_choice = choice
+    root.destroy()
+
+# Create buttons for user choice
+controlnet_button = tk.Button(root, text="Controlnet", command=lambda: set_user_choice("1"))
+img2img_button = tk.Button(root, text="Img2img", command=lambda: set_user_choice("2"))
+txt2img_button = tk.Button(root, text="Txt2img", command=lambda: set_user_choice("3"))
+
+# Pack buttons
+controlnet_button.pack()
+img2img_button.pack()
+txt2img_button.pack()
+
+# Wait for the user to click a button
+root.mainloop()
 
 def get_user_prompt():
-    return input("Enter your prompt: ")
+    return simpledialog.askstring("User Prompt", "Enter your prompt:")
 
-user_choice = get_user_choice()
 prompt = get_user_prompt()
 
 def txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_module):

@@ -28,7 +28,7 @@ Execute the script and follow the prompts to choose keywords for the X and Y axe
 
 ## SD_saving_steps_A1111.py
 
-![image](https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/A8476885-A8DA-419F-A907-4AB51D38AB7A_2/y9aqvy83R0S0EjMMszQr8OD6OZLXN9bHa92yCRVhZlMz/GAI%20-%20Frame%203.jpeg)
+![image](https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/df4f3459-1d49-48fc-9d8f-1dcc3ae6dad1)
 
 This script saves every step of the denoising process during image generation. It can be helpful for analyzing and understanding the evolution of images through the denoising steps.
 

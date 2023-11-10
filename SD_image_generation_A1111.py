@@ -1,3 +1,14 @@
+"""
+This script provides a simple GUI for users to choose between different image generation methods:
+* Text to image: generate images with a prompt as input
+* Image to image: generate images with a prompt and an image as input
+* ControlNet: adds extra conditions to control the image generated, it allows users to give
+an image as input in addition to the prompt. Users can choose between lineart, scribble, canny and depth models.
+
+It allows users to quickly experiment with different generation methods and prompts without the need
+to run the automatic1111 webui manually and it greatly reduces the amount of parameters needed.
+"""
+
 import io
 import cv2
 import base64
@@ -71,9 +82,9 @@ def set_user_choice(choice):
     root.destroy()
 
 # Create buttons for user choice
-controlnet_button = tk.Button(root, text="Controlnet", command=lambda: set_user_choice("1"))
+controlnet_button = tk.Button(root, text="Controlnet", command=lambda: set_user_choice("3"))
 img2img_button = tk.Button(root, text="Img2img", command=lambda: set_user_choice("2"))
-txt2img_button = tk.Button(root, text="Txt2img", command=lambda: set_user_choice("3"))
+txt2img_button = tk.Button(root, text="Txt2img", command=lambda: set_user_choice("1"))
 
 # Pack buttons
 controlnet_button.pack()
@@ -222,7 +233,7 @@ controlnet_mapping = {
 encoded_image = encode_image_to_base64(input_image_path)
 
 # User's choice between the different payloads
-if user_choice == "1":
+if user_choice == "3":
     if isinstance(controlnet_module, list):
         # Generate images for each controlnet module
         for module in controlnet_module:
@@ -233,7 +244,7 @@ if user_choice == "1":
 elif user_choice == "2":
     # Send the img2img request
     img2img(prompt, negative_prompt, encoded_image)
-elif user_choice == "3":
+elif user_choice == "1":
     # Generate images for each style in the 'styles' list
     for style in styles:
         txt2img(prompt, negative_prompt, model_checkpoint, [style])

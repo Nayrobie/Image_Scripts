@@ -4,7 +4,7 @@ This repository contains a few scripts for image generation using the Stable Dif
  
 ## SD_image_generation_A1111.py
 
-<img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/8420CE19-8F5F-4F2C-8169-7F43AD74A11F_2/HbHdD1nzlPcnJyMtOX4Pue7wIfL4x80X00NDVPUvkBsz/GAI%20-%20Frame%202.jpeg" width="500">
+<img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/8420CE19-8F5F-4F2C-8169-7F43AD74A11F_2/HbHdD1nzlPcnJyMtOX4Pue7wIfL4x80X00NDVPUvkBsz/GAI%20-%20Frame%202.jpeg" width="600">
 
 This script facilitates image generation using different methods:
 
@@ -18,7 +18,7 @@ Execute the script and follow the interactive prompts to choose the method, inpu
 
 ## SD_prompt_matrix_A1111.py
 
-<img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/314F4E36-4BF7-4955-BA37-FB625A988364_2/2mTwhNFZFF0WeFgLJigihPtRUTL3MuOgya2hRNEqRcsz/GAI%20-%20Frame%201.jpeg" width="500">
+<img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/314F4E36-4BF7-4955-BA37-FB625A988364_2/2mTwhNFZFF0WeFgLJigihPtRUTL3MuOgya2hRNEqRcsz/GAI%20-%20Frame%201.jpeg" width="600">
 
 This script generates a matrix of images, experimenting with blending keywords for diverse image outputs. It is useful for exploring the impact of different prompts on image generation.
 
@@ -28,7 +28,7 @@ Execute the script and follow the prompts to choose keywords for the X and Y axe
 
 ## SD_saving_steps_A1111.py
 
-![image](https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/df4f3459-1d49-48fc-9d8f-1dcc3ae6dad1)
+<img src="https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/df4f3459-1d49-48fc-9d8f-1dcc3ae6dad1" width="600">
 
 This script saves every step of the denoising process during image generation. It can be helpful for analyzing and understanding the evolution of images through the denoising steps.
 
@@ -36,7 +36,7 @@ This script saves every step of the denoising process during image generation. I
 
 This script doesn’t need to be run, place it at this location `"\stable-diffusion-webui\scripts\saving_steps.py"` then choose this script in Automatic1111 webui and copy the path to your output folder. Simply generate an image, and the script will automatically produce images corresponding to the number of sampling steps.
 
-![image](https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/64B53CE5-A09F-499E-B6F6-05CC6752CE36_2/95yvSlZ3wu3EF3pw4VAFzPyzsEuemByoNvrb7dSm0sYz/Image.png)
+<img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/64B53CE5-A09F-499E-B6F6-05CC6752CE36_2/95yvSlZ3wu3EF3pw4VAFzPyzsEuemByoNvrb7dSm0sYz/Image.png" width="600">
 
 ## 🏗️ Prerequisites
 

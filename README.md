@@ -47,6 +47,12 @@ In addition to the basic styles, there is also a template for generating Fortnit
 
 <img src="https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/87892f83-a495-47e0-a040-8e071148a07c" width="600">
 
+#### How to Run:
+
+In Automatic1111 web-ui, select the styles below the generate button
+
+<img src="https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/cb49d17b-8969-4333-9860-f0b6912f6f3bc" width="200">
+
 ## 🏗️ Prerequisites
 
 - Install [automatic1111 webui](https://github.com/dvschultz/automatic1111) by following the instructions under the Read.me section

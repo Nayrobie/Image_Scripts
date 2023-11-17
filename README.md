@@ -38,6 +38,15 @@ This script doesn’t need to be run, place it at this location `"\stable-diffus
 
 <img src="https://res.craft.do/user/full/7a93547b-a2a3-6209-a5e3-1a49258c4f73/doc/4EDB58DA-8EE5-4FDC-801D-829937E8FF43/64B53CE5-A09F-499E-B6F6-05CC6752CE36_2/95yvSlZ3wu3EF3pw4VAFzPyzsEuemByoNvrb7dSm0sYz/Image.png" width="600">
 
+## styles.csv
+
+<img src="https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/271749ca-dc50-4088-bde0-7f97523f5238" width="600">
+
+This file can help when prompting, it has different template that can be used in addition to the user's prompt. I suggest to always select the default negative prompt when generating images for better results.
+In addition to the basic styles, there is also a template for generating Fortnite skins (using both the positive and the negative Fortnite styles)
+
+<img src="https://github.com/Nayrobie/Stable_Diffusion_Scripts/assets/80701265/87892f83-a495-47e0-a040-8e071148a07c" width="600">
+
 ## 🏗️ Prerequisites
 
 - Install [automatic1111 webui](https://github.com/dvschultz/automatic1111) by following the instructions under the Read.me section

@@ -54,8 +54,4 @@ This script doesn’t need to be run, place it at this location `"\stable-diffus
 
 ## Contributors
 
-<<<<<<< HEAD
 - Yonah Bole
-=======
-- Yonah Bole
->>>>>>> 4ec464c9053fa1d35c454b0c5116ff864b29f3ae

@@ -30,19 +30,19 @@ denoising_strengh = 0.3
 styles = [
     "3D Rendering",
     "Cinematic",
-    "Portrait",
-    "Digital Drawing",
-    "Sketchbook",
-    "Manga",
-    "Indie Game",
-    "Craft Clay",
-    "Isometric",
-    "Low Poly",
-    "Origami",
-    "Biomechanical",
-    "Steampunk",
-    "Pirate Punk",
-    "Neon Punk" 
+    #"Portrait",
+    #"Digital Drawing",
+    #"Sketchbook",
+    #"Manga",
+    #"Indie Game",
+    #"Craft Clay",
+    #"Isometric",
+    #"Low Poly",
+    #"Origami",
+    #"Biomechanical",
+    #"Steampunk",
+    #"Pirate Punk",
+    #"Neon Punk" 
 ]
 controlnet_modules = [
     "canny",
@@ -126,12 +126,6 @@ def get_user_prompt():
     return simpledialog.askstring("User Prompt", "Enter your prompt:")
 prompt = get_user_prompt()
 
-# Asks the user for styles 
-#def get_user_styles():
-#    return simpledialog.askstring("User Styles", "Enter styles separated by commas:")
-#styles_input = get_user_styles()
-#styles = styles_input.split(",") if styles_input else []
-
 # Asks the user for controlnet module
 def set_controlnet_module(module):
     global controlnet_module
@@ -151,7 +145,7 @@ def txt2img(prompt, negative_prompt, model_checkpoint, styles):
         "restore_faces": False, 
         "denoising_strength": 0, 
         "extra_generation_params": {},
-        "styles": styles,
+        "styles": [styles],
         "save_images": True
     }
 
@@ -257,8 +251,6 @@ def txt2img_controlnet(prompt, negative_prompt, model_checkpoint, controlnet_mod
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=controlnet_payload)
     r = response.json()
     print(f"Generated image for controlnet_module: {controlnet_module}")
-
-
 
 encoded_image = encode_image_to_base64(input_image_path)
 

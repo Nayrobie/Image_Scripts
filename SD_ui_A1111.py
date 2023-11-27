@@ -1,45 +1,35 @@
-# 1. Installing Python 3.10.6
-# Link to local install: https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
-# check the box that says "Add Python to PATH."
-# 2. Create virtual environment in the Terminal:
-# cd "C:\Users\ybole\Desktop\A1111_artist_ ui"
-# python -m venv myenv
-# .\myenv\Scripts\Activate
-# 3. Lib installation:
-# pip install gradio
-# 4. Run the script:
-# python image_generator.py
-
-
 import gradio as gr
- 
-def generate_image(prompt, artist, style, format, perspective, booster, vibe, negative_constraints, parameters):
-    # Votre logique de génération d'image vient ici.
-    return f"Generated image with: {prompt}, {artist}, {style}, {format}, {perspective}, {booster}, {vibe}, {negative_constraints}, {parameters}"
- 
-# Créer les entrées Gradio en utilisant la nouvelle syntaxe de Gradio 4.7.1
+
+def generate_image(prompt, styles, perspectives, media, extra_tags, negative_prompt):
+    # Generated image logic here
+    return f"Generated image with: {prompt}, {styles}, {perspectives}, {media}, {extra_tags}, {negative_prompt}"
+
+# Define keyword lists
+style_list = ["hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]
+perspective_list = ["depth of field", "fisheye lens", "low view camera angle", "close-up shot", "wide shot", "full body length", "bird’s-eye view", "panoramic", "fixed focal length", "macro", "anamorphic", "overhead", "aerial"]
+media_list = ["sketchbook", "oil painting", "photography", "concept art", "portrait", "3d rendering", "octane render", "editorial cinematic", "cinemascope", "vector depiction", "digital schematics", "pbr material", "watercolour", "charcoal drawing", "graffiti"]
+extra_tag_list = ["highly detailed", "high budget", "epic", "masterpiece", "8k", "photoreal", "inspirational", "narrative-based visual", "uhd image", "dslr effect"]
+
+# Create the input components with Gradio
 prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your prompt here", label="Prompt")
-artist_input = gr.components.Dropdown(choices=["Artist 1", "Artist 2"], label="Artist")
-style_input = gr.components.Dropdown(choices=["Style 1", "Style 2"], label="Style")
-format_input = gr.components.Radio(choices=["Format 1", "Format 2"], label="Format")
-perspective_input = gr.components.Radio(choices=["Perspective 1", "Perspective 2"], label="Perspective")
-booster_input = gr.components.Slider(minimum=0, maximum=100, label="Booster")
-vibe_input = gr.components.Dropdown(choices=["Vibe 1", "Vibe 2"], label="Vibe")
-negative_constraints_input = gr.components.Textbox(lines=2, placeholder="Negative constraints", label="Negative Constraints")
-parameters_input = gr.components.Textbox(lines=2, placeholder="Parameters", label="Parameters")
- 
-# Créer l'interface Gradio
+style_input = gr.components.CheckboxGroup(choices=style_list, label="Style")
+perspective_input = gr.components.CheckboxGroup(choices=perspective_list, label="Perspective")
+media_input = gr.components.CheckboxGroup(choices=media_list, label="Media")
+extra_tag_input = gr.components.CheckboxGroup(choices=extra_tag_list, label="Extra tag")
+extra_tag_input.set_properties(default=["highly detailed", "masterpiece", "8k"])  # Set default values
+negative_prompt_input = gr.components.Textbox(lines=2, placeholder="Negative prompt", label="Negative prompt")
+
+# Create the Gradio interface
 iface = gr.Interface(
     fn=generate_image,
     inputs=[
-        prompt_input, artist_input, style_input, format_input,
-        perspective_input, booster_input, vibe_input,
-        negative_constraints_input, parameters_input
+        prompt_input, style_input, perspective_input, media_input,
+        extra_tag_input, negative_prompt_input
     ],
     outputs=gr.components.Text(label="Generated Image Details"),
     title="Stable Diffusion Image Generator",
     description="Fill out the fields below to generate an image."
 )
- 
-# Lancer l'interface
+
+# Run the interface
 iface.launch()

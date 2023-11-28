@@ -8,13 +8,18 @@ import json
 # url EKO 2 = "http://10.2.4.15:7860"
 url = "http://10.2.5.35:7860"
 # Doc http://10.2.4.15:7860/docs#/default
+# Gradio UI: http://127.0.0.1:7860/?__theme=dark
 
 model_checkpoint = "dreamshaper_8.safetensors [879db523c3]"
 
-def txt2img(prompt_input, model_checkpoint):
+def txt2img(prompt_input, style_input, perspective_input, media_input, model_checkpoint):
+    inputs = [style_input, perspective_input, media_input, prompt_input]
+    combined_prompt = ", ".join(filter(None, [str(i) for i in inputs if i]))
+
     txt2img_payload = {
-        "prompt": prompt_input,
+        "prompt": combined_prompt,
         "seed": -1,
+        "steps": 25,
         "width": 768,
         "height": 768,
         "sampler_name": "Euler a",
@@ -43,7 +48,7 @@ def txt2img(prompt_input, model_checkpoint):
     # Extract and print infotexts
     jsoninfo = json.loads(r['info'])
     print("Positive prompt:", jsoninfo["infotexts"][0]) # Terminal
-    return f"Positive prompt: {jsoninfo['infotexts'][0]}" # UI
+    return image_path, f"Positive prompt: {jsoninfo['infotexts'][0]}" # UI
     
 # Define prompt keywords list
 style_list = ["hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]
@@ -53,16 +58,22 @@ media_list = ["sketchbook", "oil painting", "photography", "concept art", "portr
 # Hidden entries
 model_checkpoint_input = gr.components.Textbox(label=model_checkpoint)
 # Visible entries
-prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your prompt here", label="Prompt")
 style_input = gr.components.Dropdown(choices=style_list, label="Style")
 perspective_input = gr.components.Dropdown(choices=perspective_list, label="Perspective")
 media_input = gr.components.Dropdown(choices=media_list, label="Media")
+prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your prompt here", label="Prompt")
 negative_prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your negative prompt here", label="Negative prompt")
 
 # Create the ui
 iface = gr.Interface(
-    fn=lambda prompt_input: txt2img(prompt_input, model_checkpoint),
-    inputs=[prompt_input],
+    fn=lambda prompt_input, style_input, perspective_input, media_input, negative_prompt_input: txt2img(prompt_input, style_input, perspective_input, media_input, model_checkpoint),
+    inputs=[
+        prompt_input,
+        style_input,
+        perspective_input,
+        media_input,
+        negative_prompt_input
+    ],
     outputs=[
         gr.Image(elem_id="generated_image", label="Generated Image"),
         gr.Textbox(label="Generated Image Details")
@@ -70,6 +81,14 @@ iface = gr.Interface(
     title="Stable Diffusion Image Generator",
     description="Fill out the fields below to generate an image.",
 )
+
+# Display the generated image above the output components
+def update_image(image_path):
+    if image_path:
+        with open(image_path, "rb") as img_file:
+            return img_file.read()
+
+iface.test_command = update_image
 
 # Run the ui
 iface.launch()

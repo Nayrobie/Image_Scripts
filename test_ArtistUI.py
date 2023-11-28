@@ -13,12 +13,18 @@ url = "http://10.2.5.35:7860"
 model_checkpoint = "dreamshaper_8.safetensors [879db523c3]"
 
 def txt2img(prompt_input, negative_prompt_input, style_input, perspective_input, media_input, model_checkpoint):
-    inputs = [style_input, perspective_input, media_input, prompt_input]
-    combined_prompt = ", ".join(filter(None, [str(i) for i in inputs if i]))
+    # Positive prompt
+    default_tag = "highly detailed, masterpiece, 8k, uhd"
+    p_inputs = [style_input, perspective_input, media_input, prompt_input, default_tag]
+    combined_prompt = ", ".join(filter(None, [str(i) if i != "None" else "" for i in p_inputs]))
+    # Negative prompt
+    default_np = "watermark, text, censored, deformed, bad anatomy, disfigured, poorly drawn face, mutated, extra limb, ugly, poorly drawn hands, missing limb, floating limbs, disconnected limbs, disconnected head, malformed hands, long neck, mutated hands and fingers, bad hands, missing fingers, cropped, worst quality, low quality, mutation, poorly drawn, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, missing fingers, fused fingers, abnormal eye proportion, Abnormal hands, abnormal legs, abnormal feet, abnormal fingers"
+    np_input = [negative_prompt_input, default_np]
+    combined_negative_prompt = ", ".join(filter(None, [str(i) if i != "None" else "" for i in np_input]))
 
     txt2img_payload = {
         "prompt": combined_prompt,
-        "negative_prompt": negative_prompt_input,
+        "negative_prompt": combined_negative_prompt,
         "seed": -1,
         "steps": 25,
         "width": 768,
@@ -52,9 +58,9 @@ def txt2img(prompt_input, negative_prompt_input, style_input, perspective_input,
     return image_path, f"Positive prompt: {jsoninfo['infotexts'][0]}" # UI
     
 # Define prompt keywords list
-style_list = ["hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]
-perspective_list = ["depth of field", "fisheye lens", "low view camera angle", "close-up shot", "wide shot", "full body length", "bird’s-eye view", "panoramic", "fixed focal length", "macro", "anamorphic", "overhead", "aerial"]
-media_list = ["sketchbook", "oil painting", "photography", "concept art", "portrait", "3d rendering", "octane render", "editorial cinematic", "cinemascope", "vector depiction", "digital schematics", "pbr material", "watercolour", "charcoal drawing", "graffiti"]
+style_list = ["None", "hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]
+perspective_list = ["None", "depth of field", "fisheye lens", "low view camera angle", "close-up shot", "wide shot", "full body length", "bird’s-eye view", "panoramic", "fixed focal length", "macro", "anamorphic", "overhead", "aerial"]
+media_list = ["None", "sketchbook", "oil painting", "photography", "concept art", "portrait", "3d rendering", "octane render", "editorial cinematic", "cinemascope", "vector depiction", "digital schematics", "pbr material", "watercolour", "charcoal drawing", "graffiti"]
 
 # Hidden entries
 model_checkpoint_input = gr.components.Textbox(label=model_checkpoint)
@@ -79,8 +85,8 @@ iface = gr.Interface(
         gr.Image(elem_id="generated_image", label="Generated Image"),
         gr.Textbox(label="Generated Image Details")
     ],
-    title="Stable Diffusion Image Generator",
-    description="Fill out the fields below to generate an image.",
+    title="Stable Diffusion Artist UI",
+    description="Simplified Image Creation for Artists. A user-friendly tool to easily generate images with fewer parameters.",
 )
 
 # Display the generated image above the output components

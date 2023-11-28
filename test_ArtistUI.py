@@ -71,6 +71,11 @@ media_input = gr.components.Dropdown(choices=media_list, label="Media")
 prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your prompt here", label="Prompt")
 negative_prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your negative prompt here", label="Negative prompt")
 
+# Set default selection
+style_input.value = "None"
+perspective_input.value = "None"
+media_input.value = "None"
+
 # Create the ui
 iface = gr.Interface(
     fn=lambda prompt_input, style_input, perspective_input, media_input, negative_prompt_input: txt2img(prompt_input, negative_prompt_input, style_input, perspective_input, media_input, model_checkpoint),

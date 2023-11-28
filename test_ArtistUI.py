@@ -2,20 +2,21 @@ import gradio as gr
 import requests
 import os
 import base64
+import json
 
 # A1111 API
 # url EKO 2 = "http://10.2.4.15:7860"
 url = "http://10.2.5.35:7860"
 # Doc http://10.2.4.15:7860/docs#/default
 
-model_checkpoint = "dreamshaperXL10_alpha2Xl10.safetensors [0f1b80cfe8]"
+model_checkpoint = "dreamshaper_8.safetensors [879db523c3]"
 
 def txt2img(prompt_input, model_checkpoint):
     txt2img_payload = {
         "prompt": prompt_input,
         "seed": -1,
-        "width": 1024,
-        "height": 1024,
+        "width": 768,
+        "height": 768,
         "sampler_name": "Euler a",
         "save_images": True
     }
@@ -32,10 +33,17 @@ def txt2img(prompt_input, model_checkpoint):
     txt2img_response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=txt2img_payload)
     r = txt2img_response.json()
 
-    # Save the image locally if it exists in the response
+    # Save the image locally
     image_data = r.get("images", [])
-    with open("generated_image.jpg", "wb") as img_file:
+    output_folder = "image_output"
+    image_path = os.path.join(output_folder, "generated_image.jpg")
+    with open(image_path, "wb") as img_file:
         img_file.write(base64.b64decode(r["images"][0]))
+        
+    # Extract and print infotexts
+    jsoninfo = json.loads(r['info'])
+    print("Positive prompt:", jsoninfo["infotexts"][0]) # Terminal
+    return f"Positive prompt: {jsoninfo['infotexts'][0]}" # UI
     
 # Define prompt keywords list
 style_list = ["hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]
@@ -55,7 +63,10 @@ negative_prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your n
 iface = gr.Interface(
     fn=lambda prompt_input: txt2img(prompt_input, model_checkpoint),
     inputs=[prompt_input],
-    outputs=gr.components.Textbox(label="Generated Image Details"),
+    outputs=[
+        gr.Image(elem_id="generated_image", label="Generated Image"),
+        gr.Textbox(label="Generated Image Details")
+    ],
     title="Stable Diffusion Image Generator",
     description="Fill out the fields below to generate an image.",
 )

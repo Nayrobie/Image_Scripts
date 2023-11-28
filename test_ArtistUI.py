@@ -1,6 +1,6 @@
 import gradio as gr
 import requests
-import os
+import base64
 
 # A1111 API
 # url EKO 2 = "http://10.2.4.15:7860"

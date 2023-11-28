@@ -1,5 +1,6 @@
 import gradio as gr
 import requests
+import os
 import base64
 
 # A1111 API
@@ -33,13 +34,8 @@ def txt2img(prompt_input, model_checkpoint):
 
     # Save the image locally if it exists in the response
     image_data = r.get("images", [])
-    if image_data and image_data[0].startswith("data:image"):
-        image_base64 = image_data[0].split(",")[1]
-        with open("generated_image.png", "wb") as img_file:
-            img_file.write(base64.b64decode(image_base64))
-        print("Image saved locally as generated_image.png")
-    else:
-        print("Saving image failed")
+    with open("generated_image.jpg", "wb") as img_file:
+        img_file.write(base64.b64decode(r["images"][0]))
     
 # Define prompt keywords list
 style_list = ["hyper-realistic", "minimalist", "surreal", "abstract", "steampunk", "cyberpunk", "mystical", "moody", "intricate details", "hazy atmosphere", "handcrafted", "mysterious", "ethereal", "enigmatic", "otherworldly"]

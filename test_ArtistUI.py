@@ -12,12 +12,13 @@ url = "http://10.2.5.35:7860"
 
 model_checkpoint = "dreamshaper_8.safetensors [879db523c3]"
 
-def txt2img(prompt_input, style_input, perspective_input, media_input, model_checkpoint):
+def txt2img(prompt_input, negative_prompt_input, style_input, perspective_input, media_input, model_checkpoint):
     inputs = [style_input, perspective_input, media_input, prompt_input]
     combined_prompt = ", ".join(filter(None, [str(i) for i in inputs if i]))
 
     txt2img_payload = {
         "prompt": combined_prompt,
+        "negative_prompt": negative_prompt_input,
         "seed": -1,
         "steps": 25,
         "width": 768,
@@ -66,7 +67,7 @@ negative_prompt_input = gr.components.Textbox(lines=2, placeholder="Enter your n
 
 # Create the ui
 iface = gr.Interface(
-    fn=lambda prompt_input, style_input, perspective_input, media_input, negative_prompt_input: txt2img(prompt_input, style_input, perspective_input, media_input, model_checkpoint),
+    fn=lambda prompt_input, style_input, perspective_input, media_input, negative_prompt_input: txt2img(prompt_input, negative_prompt_input, style_input, perspective_input, media_input, model_checkpoint),
     inputs=[
         prompt_input,
         style_input,
